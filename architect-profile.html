@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Architect Profile | ARCH — MAG.</title>
+  <meta name="description" content="Architect biography, quick facts, and notable works.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="progressBar"></div>
+
+<header>
+  <nav class="navbar container">
+    <div class="logo"><a href="index.html"><img src="images/brand/architrave-mark.png" alt="Architrave" class="logo-mark"><span class="logo-word">Architrave.</span></a></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="architects.html" class="active">Architects</a></li>
+      <li><a href="buildings.html">Buildings</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="menu-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </nav>
+</header>
+
+<div id="profileRoot">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Profile</span>
+      <h1 id="loadingMsg">Loading…</h1>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-column">
+        <h3>ARCHI TRAVE.</h3>
+        <p>A digital destination celebrating the world's greatest architects, iconic buildings, and innovative design.</p>
+      </div>
+      <div class="footer-column">
+        <h3>Navigate</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="architects.html">Architects</a></li>
+          <li><a href="buildings.html">Buildings</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="about.html">Our Mission</a></li>
+          <li><a href="architects.html">Architect Directory</a></li>
+          <li><a href="buildings.html">Building Archive</a></li>
+          <li><a href="contact.html">Get in Touch</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Contact</h3>
+        <p>hello@archmag.com</p>
+        <p>Addis Ababa, Ethiopia</p>
+        <div class="social-links">
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="footer-bottom">
+      <p>© 2026 ARCH — MAG. All Rights Reserved.</p>
+      <p>Built for architecture lovers.</p>
+    </div>
+  </div>
+</footer>
+
+<button id="backToTop" aria-label="Back to top">↑</button>
+<script src="js/main.js"></script>
+<script>
+const esc = s => String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const id = new URLSearchParams(location.search).get('id');
+const root = document.getElementById('profileRoot');
+
+fetch('data/architects.json')
+  .then(r => r.json())
+  .then(list => {
+    const a = list.find(x => x.id === id);
+    if(!a){
+      root.innerHTML = `<section class="page-hero"><div class="container"><span class="eyebrow">Profile</span><h1>Architect not found</h1><p><a href="architects.html" class="link-arrow">&larr; Back to Architects</a></p></div></section>`;
+      return;
+    }
+    document.getElementById('pageTitle').textContent = a.name + ' | ARCH — MAG.';
+    const meta = [a.nationality, a.born ? 'b. ' + a.born : ''].filter(Boolean).join(' — ');
+    const works = (a.notableWorks || []).map(w => `<li><span>&#9670;</span> ${esc(w)}</li>`).join('');
+    const bioParas = (a.bio || 'No biography yet.').split(/\n+/).filter(Boolean).map(p => `<p>${esc(p)}</p>`).join('');
+
+    root.innerHTML = `
+      <section class="architect-hero">
+        <div class="container">
+          <div class="architect-hero-content">
+            <div class="architect-image crop"><img src="${esc(a.photo) || 'images/architects/zaha.jpg'}" alt="${esc(a.name)}"></div>
+            <div class="architect-info">
+              <span class="eyebrow">Profile</span>
+              <h1>${esc(a.name)}</h1>
+              <p class="country">${esc(meta)}</p>
+              <p class="profession">${esc(a.role) || 'Architect'}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="biography section-pad reveal">
+        <div class="container">
+          <div class="section-head">
+            <div><span class="section-num">01 / Biography</span><h2>Life &amp; Work</h2></div>
+          </div>
+          <div class="bio-content">${bioParas}</div>
+        </div>
+      </section>
+
+      ${works ? `
+      <section class="awards section-pad-sm reveal">
+        <div class="container">
+          <div class="section-head">
+            <div><span class="section-num">02 / Portfolio</span><h2>Notable Works</h2></div>
+          </div>
+          <ul class="awards-list">${works}</ul>
+        </div>
+      </section>` : ''}
+
+      <section class="back-section">
+        <div class="container">
+          <a href="architects.html" class="link-arrow">&larr; Back to Architects</a>
+        </div>
+      </section>
+    `;
+  })
+  .catch(() => {
+    root.innerHTML = `<section class="page-hero"><div class="container"><span class="eyebrow">Profile</span><h1>Could not load this profile</h1></div></section>`;
+  });
+</script>
+</body>
+</html>

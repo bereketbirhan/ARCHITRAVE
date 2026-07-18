@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Admin — Architects &amp; Buildings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blueprint:#0E2A43;
+    --blueprint-deep:#081b2c;
+    --grid-line: rgba(127,179,213,0.14);
+    --grid-line-strong: rgba(127,179,213,0.28);
+    --paper:#F4F7F9;
+    --paper-white:#FFFFFF;
+    --ink:#122236;
+    --ink-soft:#4C6479;
+    --cyan:#6FC3E8;
+    --cyan-bright:#9FE0FF;
+    --amber:#F2A93B;
+    --danger:#D9564F;
+    --ok:#4FA97C;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0/32px 32px,
+      var(--blueprint);
+    background-attachment:fixed;
+    color:var(--paper);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+  }
+  ::selection{background:var(--cyan); color:var(--blueprint-deep);}
+
+  /* Header */
+  header{
+    padding:28px clamp(16px,4vw,48px) 20px;
+    border-bottom:1px solid var(--grid-line-strong);
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .brand{display:flex; align-items:center; gap:14px;}
+  .brand svg{flex-shrink:0;}
+  .brand h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:0.3px;
+    margin:0;
+    color:var(--cyan-bright);
+  }
+  .brand .tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:2.5px;
+    color:var(--ink-soft);
+    color:#7FA0BC;
+    display:block;
+    margin-top:2px;
+  }
+  .header-note{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:#7FA0BC;
+    text-align:right;
+    line-height:1.6;
+  }
+
+  /* Tabs */
+  .tabs{
+    display:flex;
+    gap:2px;
+    padding:0 clamp(16px,4vw,48px);
+    margin-top:22px;
+  }
+  .tab-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:1.5px;
+    background:transparent;
+    border:1px solid var(--grid-line-strong);
+    border-bottom:none;
+    color:#7FA0BC;
+    padding:11px 22px;
+    cursor:pointer;
+    border-radius:3px 3px 0 0;
+    transition:all .15s ease;
+  }
+  .tab-btn.active{
+    background:var(--paper);
+    color:var(--blueprint-deep);
+    border-color:var(--paper);
+  }
+  .tab-btn:not(.active):hover{ color:var(--cyan-bright); }
+
+  main{
+    background:var(--paper);
+    min-height:calc(100vh - 160px);
+    padding:clamp(20px,4vw,44px);
+  }
+  .panel{ display:none; }
+  .panel.active{ display:grid; grid-template-columns: 380px 1fr; gap:32px; align-items:start; }
+  @media (max-width: 880px){ .panel.active{ grid-template-columns:1fr; } }
+
+  /* Form sheet */
+  .sheet{
+    background:var(--paper-white);
+    border:1px solid #D9E2E8;
+    position:relative;
+    padding:24px;
+  }
+  .sheet::before, .sheet::after, .tick-tl, .tick-br{
+    content:"";
+    position:absolute;
+    width:14px; height:14px;
+    border-color:var(--blueprint);
+  }
+  .sheet::before{ top:-1px; left:-1px; border-top:2px solid var(--blueprint); border-left:2px solid var(--blueprint); }
+  .sheet::after{ bottom:-1px; right:-1px; border-bottom:2px solid var(--blueprint); border-right:2px solid var(--blueprint); }
+
+  .sheet h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:16px;
+    margin:0 0 4px;
+    color:var(--blueprint-deep);
+  }
+  .sheet .sheet-sub{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:1.5px;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+    display:block;
+    text-transform:uppercase;
+  }
+  label{
+    display:block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:14px 0 5px;
+  }
+  label:first-of-type{ margin-top:0; }
+  input, textarea, select{
+    width:100%;
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    padding:9px 10px;
+    border:1px solid #C7D3DB;
+    border-radius:var(--radius);
+    background:#FAFCFD;
+    color:var(--ink);
+  }
+  input:focus, textarea:focus, select:focus{
+    outline:2px solid var(--cyan);
+    outline-offset:1px;
+    border-color:var(--cyan);
+  }
+  textarea{ resize:vertical; min-height:70px; font-family:'Inter', sans-serif; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+  .form-actions{ display:flex; gap:10px; margin-top:20px; }
+  button{ font-family:'JetBrains Mono', monospace; cursor:pointer; border:none; border-radius:var(--radius); }
+  .btn-primary{
+    background:var(--blueprint);
+    color:var(--cyan-bright);
+    font-size:12px;
+    letter-spacing:1px;
+    padding:11px 18px;
+    flex:1;
+    transition:background .15s ease;
+  }
+  .btn-primary:hover{ background:var(--blueprint-deep); }
+  .btn-ghost{
+    background:transparent;
+    border:1px solid #C7D3DB;
+    color:var(--ink-soft);
+    font-size:12px;
+    padding:11px 16px;
+  }
+  .btn-ghost:hover{ border-color:var(--ink-soft); color:var(--ink); }
+
+  /* List / toolbar */
+  .list-toolbar{
+    display:flex;
+    gap:10px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .search-input{ flex:1; min-width:160px; }
+  .btn-small{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:1px;
+    padding:9px 14px;
+    background:var(--paper-white);
+    border:1px solid #C7D3DB;
+    color:var(--blueprint-deep);
+    white-space:nowrap;
+  }
+  .btn-small:hover{ background:var(--blueprint); color:var(--cyan-bright); border-color:var(--blueprint); }
+  #import-architects, #import-buildings{ display:none; }
+
+  .cards{ display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:16px; }
+  .card{
+    background:var(--paper-white);
+    border:1px solid #D9E2E8;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .card img{ width:100%; height:130px; object-fit:cover; display:block; background:#E4EAEE; }
+  .card-body{ padding:14px 14px 12px; flex:1; }
+  .card-body h3{ font-family:'Space Grotesk',sans-serif; font-size:15px; margin:0 0 4px; color:var(--blueprint-deep); }
+  .card-body p{ font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin:0; max-height:56px; overflow:hidden; }
+  .titleblock{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.5px;
+    background:var(--blueprint);
+    color:#B9DCEF;
+    display:flex;
+    justify-content:space-between;
+    padding:7px 10px;
+  }
+  .titleblock span b{ color:var(--cyan-bright); font-weight:600; }
+  .card-actions{ display:flex; border-top:1px solid #E3E9ED; }
+  .card-actions button{
+    flex:1;
+    background:none;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:1px;
+    padding:8px;
+    color:var(--ink-soft);
+  }
+  .card-actions button:first-child{ border-right:1px solid #E3E9ED; }
+  .card-actions button:hover{ background:#F0F4F6; color:var(--blueprint-deep); }
+  .card-actions button.danger:hover{ color:var(--danger); }
+
+  .empty-state{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    border:1px dashed #C7D3DB;
+    padding:30px;
+    text-align:center;
+    grid-column:1/-1;
+  }
+
+  .toast{
+    position:fixed;
+    bottom:22px; right:22px;
+    background:var(--blueprint-deep);
+    color:var(--cyan-bright);
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.5px;
+    padding:12px 18px;
+    border-radius:2px;
+    border:1px solid var(--cyan);
+    transform:translateY(20px);
+    opacity:0;
+    transition:all .25s ease;
+    pointer-events:none;
+    z-index:50;
+  }
+  .toast.show{ transform:translateY(0); opacity:1; }
+
+  footer{
+    padding:16px clamp(16px,4vw,48px) 26px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    color:#7FA0BC;
+    letter-spacing:0.5px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+      <circle cx="17" cy="17" r="15.5" stroke="#6FC3E8" stroke-width="1.2"/>
+      <path d="M17 3 L17 31 M3 17 L31 17" stroke="#6FC3E8" stroke-width="0.6"/>
+      <path d="M9 24 L17 8 L25 24 Z" stroke="#9FE0FF" stroke-width="1.4" fill="none"/>
+    </svg>
+    <div>
+      <h1>Site Content Panel</h1>
+      <span class="tag">ARCHITECTS &amp; BUILDINGS REGISTRY</span>
+    </div>
+  </div>
+  <div class="header-note">
+    Edits are local until exported.<br>
+    Export → commit the JSON files to your GitHub repo.
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="architects">01 — ARCHITECTS</button>
+  <button class="tab-btn" data-tab="buildings">02 — BUILDINGS</button>
+</div>
+
+<main>
+
+  <!-- ARCHITECTS PANEL -->
+  <section class="panel active" id="panel-architects">
+    <form class="sheet" id="form-architects">
+      <h2 id="arc-form-title">Add an architect</h2>
+      <span class="sheet-sub">Entry sheet — architect record</span>
+      <input type="hidden" id="arc-id">
+      <label for="arc-name">Full name</label>
+      <input id="arc-name" required placeholder="e.g. Amara Tesfaye">
+      <div class="row2">
+        <div>
+          <label for="arc-role">Role</label>
+          <input id="arc-role" placeholder="Principal Architect">
+        </div>
+        <div>
+          <label for="arc-born">Born (year)</label>
+          <input id="arc-born" placeholder="1978">
+        </div>
+      </div>
+      <label for="arc-nat">Nationality</label>
+      <input id="arc-nat" placeholder="Ethiopian">
+      <label for="arc-photo">Photo URL</label>
+      <input id="arc-photo" placeholder="https://...">
+      <label for="arc-works">Notable works (comma-separated)</label>
+      <input id="arc-works" placeholder="Meskel Cultural Center, Addis River Pavilion">
+      <label for="arc-bio">Biography</label>
+      <textarea id="arc-bio" placeholder="Short biography..."></textarea>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save architect</button>
+        <button type="button" class="btn-ghost" id="arc-cancel">Clear</button>
+      </div>
+    </form>
+
+    <div>
+      <div class="list-toolbar">
+        <input class="search-input" id="arc-search" placeholder="Search architects...">
+        <button class="btn-small" id="arc-export">↓ Export JSON</button>
+        <button class="btn-small" id="arc-import-btn">↑ Import JSON</button>
+        <input type="file" id="import-architects" accept="application/json">
+      </div>
+      <div class="cards" id="arc-list"></div>
+    </div>
+  </section>
+
+  <!-- BUILDINGS PANEL -->
+  <section class="panel" id="panel-buildings">
+    <form class="sheet" id="form-buildings">
+      <h2 id="bld-form-title">Add a building</h2>
+      <span class="sheet-sub">Entry sheet — building record</span>
+      <input type="hidden" id="bld-id">
+      <label for="bld-name">Building name</label>
+      <input id="bld-name" required placeholder="e.g. Meskel Cultural Center">
+      <label for="bld-architect">Architect</label>
+      <select id="bld-architect"></select>
+      <div class="row2">
+        <div>
+          <label for="bld-year">Year</label>
+          <input id="bld-year" placeholder="2019">
+        </div>
+        <div>
+          <label for="bld-status">Status</label>
+          <select id="bld-status">
+            <option>Completed</option>
+            <option>Under Construction</option>
+            <option>Concept</option>
+          </select>
+        </div>
+      </div>
+      <label for="bld-location">Location</label>
+      <input id="bld-location" placeholder="Addis Ababa, Ethiopia">
+      <label for="bld-category">Category</label>
+      <input id="bld-category" placeholder="Cultural / Residential / Civic...">
+      <label for="bld-photo">Photo URL</label>
+      <input id="bld-photo" placeholder="https://...">
+      <label for="bld-desc">Description</label>
+      <textarea id="bld-desc" placeholder="Short description..."></textarea>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save building</button>
+        <button type="button" class="btn-ghost" id="bld-cancel">Clear</button>
+      </div>
+    </form>
+
+    <div>
+      <div class="list-toolbar">
+        <input class="search-input" id="bld-search" placeholder="Search buildings...">
+        <button class="btn-small" id="bld-export">↓ Export JSON</button>
+        <button class="btn-small" id="bld-import-btn">↑ Import JSON</button>
+        <input type="file" id="import-buildings" accept="application/json">
+      </div>
+      <div class="cards" id="bld-list"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Data lives only in this browser until exported — export regularly and commit to /data/ in your repo.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- Storage helpers ---------- */
+const LS_ARCHITECTS = 'panel_architects';
+const LS_BUILDINGS = 'panel_buildings';
+
+const seedArchitects = [{
+  id:"arc-001", name:"Amara Tesfaye", role:"Principal Architect", born:"1978",
+  nationality:"Ethiopian", photo:"https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400",
+  bio:"Known for blending modernist form with traditional Ethiopian building materials, Amara has led public and cultural projects across East Africa for over two decades.",
+  notableWorks:["Meskel Cultural Center","Addis River Pavilion"]
+}];
+const seedBuildings = [{
+  id:"bld-001", name:"Meskel Cultural Center", architectId:"arc-001",
+  location:"Addis Ababa, Ethiopia", year:"2019", category:"Cultural", status:"Completed",
+  photo:"https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=600",
+  description:"A woven-concrete cultural hall referencing traditional basket weaving patterns, built around a central courtyard that stays cool without mechanical air conditioning."
+}];
+
+function load(key, seed){
+  const raw = localStorage.getItem(key);
+  if(!raw){ localStorage.setItem(key, JSON.stringify(seed)); return structuredClone(seed); }
+  try{ return JSON.parse(raw); }catch(e){ return structuredClone(seed); }
+}
+function save(key, data){ localStorage.setItem(key, JSON.stringify(data)); }
+
+let architects = load(LS_ARCHITECTS, seedArchitects);
+let buildings = load(LS_BUILDINGS, seedBuildings);
+
+function uid(prefix){ return prefix + '-' + Math.random().toString(36).slice(2,8); }
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ---------- Tabs ---------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ---------- Architects ---------- */
+const arcForm = document.getElementById('form-architects');
+function renderArchitects(filter=''){
+  const list = document.getElementById('arc-list');
+  const items = architects.filter(a => a.name.toLowerCase().includes(filter.toLowerCase()));
+  list.innerHTML = items.length ? '' : '<div class="empty-state">No architects yet — add your first entry sheet on the left.</div>';
+  items.forEach(a=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      ${a.photo ? `<img src="${escapeHtml(a.photo)}" alt="${escapeHtml(a.name)}">` : ''}
+      <div class="card-body">
+        <h3>${escapeHtml(a.name)}</h3>
+        <p>${escapeHtml(a.bio||'No biography yet.')}</p>
+      </div>
+      <div class="titleblock"><span>ROLE <b>${escapeHtml(a.role||'—')}</b></span><span>BORN <b>${escapeHtml(a.born||'—')}</b></span></div>
+      <div class="card-actions">
+        <button data-edit="${a.id}">EDIT</button>
+        <button data-del="${a.id}" class="danger">DELETE</button>
+      </div>`;
+    list.appendChild(card);
+  });
+  list.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editArchitect(b.dataset.edit)));
+  list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>deleteArchitect(b.dataset.del)));
+}
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function editArchitect(id){
+  const a = architects.find(x=>x.id===id);
+  if(!a) return;
+  document.getElementById('arc-id').value = a.id;
+  document.getElementById('arc-name').value = a.name||'';
+  document.getElementById('arc-role').value = a.role||'';
+  document.getElementById('arc-born').value = a.born||'';
+  document.getElementById('arc-nat').value = a.nationality||'';
+  document.getElementById('arc-photo').value = a.photo||'';
+  document.getElementById('arc-works').value = (a.notableWorks||[]).join(', ');
+  document.getElementById('arc-bio').value = a.bio||'';
+  document.getElementById('arc-form-title').textContent = 'Editing — ' + a.name;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function deleteArchitect(id){
+  if(!confirm('Delete this architect? This cannot be undone.')) return;
+  architects = architects.filter(x=>x.id!==id);
+  save(LS_ARCHITECTS, architects);
+  renderArchitects(document.getElementById('arc-search').value);
+  populateArchitectSelect();
+  toast('Architect deleted');
+}
+arcForm.addEventListener('submit', e=>{
+  e.preventDefault();
+  const id = document.getElementById('arc-id').value;
+  const entry = {
+    id: id || uid('arc'),
+    name: document.getElementById('arc-name').value.trim(),
+    role: document.getElementById('arc-role').value.trim(),
+    born: document.getElementById('arc-born').value.trim(),
+    nationality: document.getElementById('arc-nat').value.trim(),
+    photo: document.getElementById('arc-photo').value.trim(),
+    notableWorks: document.getElementById('arc-works').value.split(',').map(s=>s.trim()).filter(Boolean),
+    bio: document.getElementById('arc-bio').value.trim()
+  };
+  if(!entry.name) return;
+  const idx = architects.findIndex(x=>x.id===entry.id);
+  if(idx>=0) architects[idx] = entry; else architects.push(entry);
+  save(LS_ARCHITECTS, architects);
+  arcForm.reset();
+  document.getElementById('arc-id').value='';
+  document.getElementById('arc-form-title').textContent = 'Add an architect';
+  renderArchitects(document.getElementById('arc-search').value);
+  populateArchitectSelect();
+  toast('Architect saved');
+});
+document.getElementById('arc-cancel').addEventListener('click', ()=>{
+  arcForm.reset();
+  document.getElementById('arc-id').value='';
+  document.getElementById('arc-form-title').textContent = 'Add an architect';
+});
+document.getElementById('arc-search').addEventListener('input', e=>renderArchitects(e.target.value));
+document.getElementById('arc-export').addEventListener('click', ()=>downloadJson(architects, 'architects.json'));
+document.getElementById('arc-import-btn').addEventListener('click', ()=>document.getElementById('import-architects').click());
+document.getElementById('import-architects').addEventListener('change', e=>importJson(e, data=>{
+  architects = data; save(LS_ARCHITECTS, architects); renderArchitects(); populateArchitectSelect();
+}));
+
+/* ---------- Buildings ---------- */
+const bldForm = document.getElementById('form-buildings');
+function populateArchitectSelect(){
+  const sel = document.getElementById('bld-architect');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">— Unassigned —</option>' +
+    architects.map(a=>`<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('');
+  sel.value = current;
+}
+function architectName(id){
+  const a = architects.find(x=>x.id===id);
+  return a ? a.name : 'Unassigned';
+}
+function renderBuildings(filter=''){
+  const list = document.getElementById('bld-list');
+  const items = buildings.filter(b => b.name.toLowerCase().includes(filter.toLowerCase()));
+  list.innerHTML = items.length ? '' : '<div class="empty-state">No buildings yet — add your first entry sheet on the left.</div>';
+  items.forEach(b=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      ${b.photo ? `<img src="${escapeHtml(b.photo)}" alt="${escapeHtml(b.name)}">` : ''}
+      <div class="card-body">
+        <h3>${escapeHtml(b.name)}</h3>
+        <p>${escapeHtml(b.description||'No description yet.')}</p>
+      </div>
+      <div class="titleblock"><span>${escapeHtml(b.year||'—')}</span><span><b>${escapeHtml(b.status||'—')}</b></span><span>${escapeHtml(architectName(b.architectId))}</span></div>
+      <div class="card-actions">
+        <button data-edit="${b.id}">EDIT</button>
+        <button data-del="${b.id}" class="danger">DELETE</button>
+      </div>`;
+    list.appendChild(card);
+  });
+  list.querySelectorAll('[data-edit]').forEach(btn=>btn.addEventListener('click', ()=>editBuilding(btn.dataset.edit)));
+  list.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click', ()=>deleteBuilding(btn.dataset.del)));
+}
+function editBuilding(id){
+  const b = buildings.find(x=>x.id===id);
+  if(!b) return;
+  document.getElementById('bld-id').value = b.id;
+  document.getElementById('bld-name').value = b.name||'';
+  document.getElementById('bld-architect').value = b.architectId||'';
+  document.getElementById('bld-year').value = b.year||'';
+  document.getElementById('bld-status').value = b.status||'Completed';
+  document.getElementById('bld-location').value = b.location||'';
+  document.getElementById('bld-category').value = b.category||'';
+  document.getElementById('bld-photo').value = b.photo||'';
+  document.getElementById('bld-desc').value = b.description||'';
+  document.getElementById('bld-form-title').textContent = 'Editing — ' + b.name;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function deleteBuilding(id){
+  if(!confirm('Delete this building? This cannot be undone.')) return;
+  buildings = buildings.filter(x=>x.id!==id);
+  save(LS_BUILDINGS, buildings);
+  renderBuildings(document.getElementById('bld-search').value);
+  toast('Building deleted');
+}
+bldForm.addEventListener('submit', e=>{
+  e.preventDefault();
+  const id = document.getElementById('bld-id').value;
+  const entry = {
+    id: id || uid('bld'),
+    name: document.getElementById('bld-name').value.trim(),
+    architectId: document.getElementById('bld-architect').value,
+    year: document.getElementById('bld-year').value.trim(),
+    status: document.getElementById('bld-status').value,
+    location: document.getElementById('bld-location').value.trim(),
+    category: document.getElementById('bld-category').value.trim(),
+    photo: document.getElementById('bld-photo').value.trim(),
+    description: document.getElementById('bld-desc').value.trim()
+  };
+  if(!entry.name) return;
+  const idx = buildings.findIndex(x=>x.id===entry.id);
+  if(idx>=0) buildings[idx] = entry; else buildings.push(entry);
+  save(LS_BUILDINGS, buildings);
+  bldForm.reset();
+  document.getElementById('bld-id').value='';
+  document.getElementById('bld-form-title').textContent = 'Add a building';
+  renderBuildings(document.getElementById('bld-search').value);
+  toast('Building saved');
+});
+document.getElementById('bld-cancel').addEventListener('click', ()=>{
+  bldForm.reset();
+  document.getElementById('bld-id').value='';
+  document.getElementById('bld-form-title').textContent = 'Add a building';
+});
+document.getElementById('bld-search').addEventListener('input', e=>renderBuildings(e.target.value));
+document.getElementById('bld-export').addEventListener('click', ()=>downloadJson(buildings, 'buildings.json'));
+document.getElementById('bld-import-btn').addEventListener('click', ()=>document.getElementById('import-buildings').click());
+document.getElementById('import-buildings').addEventListener('change', e=>importJson(e, data=>{
+  buildings = data; save(LS_BUILDINGS, buildings); renderBuildings();
+}));
+
+/* ---------- Shared: export / import ---------- */
+function downloadJson(data, filename){
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Downloaded ' + filename);
+}
+function importJson(e, onData){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const data = JSON.parse(reader.result);
+      if(!Array.isArray(data)) throw new Error('not an array');
+      onData(data);
+      toast('Imported ' + file.name);
+    }catch(err){
+      alert('Could not read that file — make sure it is a valid JSON array exported from this panel.');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+/* ---------- Init ---------- */
+populateArchitectSelect();
+renderArchitects();
+renderBuildings();
+</script>
+</body>
+</html>

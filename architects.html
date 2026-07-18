@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architects | ARCH — MAG.</title>
+  <meta name="description" content="Browse profiles of the world's most influential architects — biographies, projects, awards, and design philosophy.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="progressBar"></div>
+
+<header>
+  <nav class="navbar container">
+    <div class="logo"><a href="index.html"><img src="images/brand/architrave-mark.png" alt="Architrave" class="logo-mark"><span class="logo-word">Architrave.</span></a></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="architects.html" class="active">Architects</a></li>
+      <li><a href="buildings.html">Buildings</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="menu-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Directory</span>
+    <h1>World Famous Architects</h1>
+    <p>Legendary architects who transformed the world through innovative design — search by name or country.</p>
+  </div>
+</section>
+
+<section class="search-section">
+  <div class="container">
+    <div class="search-wrap">
+      <span class="mono-label">Search</span>
+      <input type="text" id="searchArchitect" placeholder="Try “Hadid” or “Japan”...">
+    </div>
+  </div>
+</section>
+
+<section class="architect-list section-pad">
+  <div class="container">
+    <div class="architect-grid">
+
+      <div class="architect-card" data-name="Zaha Hadid" data-country="Iraq United Kingdom">
+        <div class="thumb"><span class="idx">N&deg;01</span><img src="images/architects/zaha.jpg" alt="Zaha Hadid"></div>
+        <div class="card-content">
+          <h3>Zaha Hadid</h3>
+          <p>Iraq &middot; United Kingdom</p>
+          <a href="zaha-hadid.html" class="btn btn-outline">View Profile</a>
+        </div>
+      </div>
+
+      <div class="architect-card" data-name="Frank Gehry" data-country="Canada USA">
+        <div class="thumb"><span class="idx">N&deg;02</span><img src="images/architects/frank-gehry.jpg" alt="Frank Gehry"></div>
+        <div class="card-content">
+          <h3>Frank Gehry</h3>
+          <p>Canada &middot; United States</p>
+          <a href="frank-gehry.html" class="btn btn-outline">View Profile</a>
+        </div>
+      </div>
+
+      <div class="architect-card" data-name="Tadao Ando" data-country="Japan">
+        <div class="thumb"><span class="idx">N&deg;03</span><img src="images/architects/tadao-ando.jpg" alt="Tadao Ando"></div>
+        <div class="card-content">
+          <h3>Tadao Ando</h3>
+          <p>Japan</p>
+          <a href="tadao-ando.html" class="btn btn-outline">View Profile</a>
+        </div>
+      </div>
+
+      <div class="architect-card" data-name="Norman Foster" data-country="United Kingdom">
+        <div class="thumb"><span class="idx">N&deg;04</span><img src="images/architects/norman-foster.jpg" alt="Norman Foster"></div>
+        <div class="card-content">
+          <h3>Norman Foster</h3>
+          <p>United Kingdom</p>
+          <a href="norman-foster.html" class="btn btn-outline">View Profile</a>
+        </div>
+      </div>
+
+      <div class="architect-card" data-name="Le Corbusier" data-country="France Switzerland">
+        <div class="thumb"><span class="idx">N&deg;05</span><img src="images/architects/le-corbusier.jpg" alt="Le Corbusier"></div>
+        <div class="card-content">
+          <h3>Le Corbusier</h3>
+          <p>France &middot; Switzerland</p>
+          <a href="le-corbusier.html" class="btn btn-outline">View Profile</a>
+        </div>
+      </div>
+
+      <div class="architect-card" data-name="Bjarke Ingels" data-country="Denmark">
+        <div class="thumb"><span class="idx">N&deg;06</span><img src="images/architects/bjarke-ingels.jpg" alt="Bjarke Ingels"></div>
+        <div class="card-content">
+          <h3>Bjarke Ingels</h3>
+          <p>Denmark</p>
+          <a href="bjarke-ingels.html" class="btn btn-outline">View Profile</a>
+        </div>
+      </div>
+
+    </div>
+    <p class="no-results">No architects match your search.</p>
+  </div>
+</section>
+
+<section class="architect-list section-pad" id="dynamic-architects-section" hidden>
+  <div class="container">
+    <span class="eyebrow">Registry</span>
+    <h2 style="margin-bottom:2rem;">Recently Added</h2>
+    <div class="architect-grid" id="dynamic-architects"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-column">
+        <h3>ARCHI TRAVE.</h3>
+        <p>A digital destination celebrating the world's greatest architects, iconic buildings, and innovative design.</p>
+      </div>
+      <div class="footer-column">
+        <h3>Navigate</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="architects.html">Architects</a></li>
+          <li><a href="buildings.html">Buildings</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="about.html">Our Mission</a></li>
+          <li><a href="architects.html">Architect Directory</a></li>
+          <li><a href="buildings.html">Building Archive</a></li>
+          <li><a href="contact.html">Get in Touch</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Contact</h3>
+        <p>hello@archmag.com</p>
+        <p>Addis Ababa, Ethiopia</p>
+        <div class="social-links">
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="footer-bottom">
+      <p>© 2026 ARCH — MAG. All Rights Reserved.</p>
+      <p>Built for architecture lovers.</p>
+    </div>
+  </div>
+</footer>
+
+<button id="backToTop" aria-label="Back to top">↑</button>
+<script src="js/main.js"></script>
+<script>
+fetch('data/architects.json')
+  .then(r => r.ok ? r.json() : [])
+  .then(data => {
+    if(!Array.isArray(data) || !data.length) return;
+    const grid = document.getElementById('dynamic-architects');
+    const esc = s => String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    grid.innerHTML = data.map((a,i) => `
+      <div class="architect-card" data-name="${esc(a.name)}" data-country="${esc(a.nationality)}">
+        <div class="thumb">
+          <span class="idx">N&deg;${String(i+1).padStart(2,'0')}</span>
+          <img src="${esc(a.photo) || 'images/architects/zaha.jpg'}" alt="${esc(a.name)}">
+        </div>
+        <div class="card-content">
+          <h3>${esc(a.name)}</h3>
+          <p>${esc(a.nationality) || esc(a.role) || ''}</p>
+          <a href="architect-profile.html?id=${encodeURIComponent(a.id)}" class="btn btn-outline">View Profile</a>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('dynamic-architects-section').hidden = false;
+  })
+  .catch(()=>{});
+</script>
+</body>
+</html>
